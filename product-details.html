@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="imgs/nota-icon.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <title>Nota-product-details</title>
+</head>
+<body>
+<header>
+    <div class="header-parent">
+        <div class="header-title">
+            <h1>Nota</h1>
+        </div>
+        <div class="header-links">
+            <div><a href="index.html" class="hover-effect"><p>HOME</p><i class="fa-solid fa-house"></i></a></div>
+            <div><a href="products.html"><p>PRODUCTS</p><i class="fa-solid fa-book"></i></a></div>
+            <div><a href="card.html"><p>CARD</p><i class="fa-solid fa-cart-shopping"></i></a></div>
+        </div>
+        <div class="header-username">
+            <button style="display: none;" type="button" id="openBtn" class="fa-solid fa-search"><span class="span1">.</span></button>
+            <a href="http://localhost/Nota/login_signup.php">
+                <button type="button" class="fa-solid fa-user">
+                    <span class="span1">.</span>
+                </button>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<div id="search">
+    <form action="" method="get">
+        <label for="search-bar">search:</label>
+        <input name="aa" id="search-bar" type="search">
+        <button class="search-click" type="submit">Click</button>
+        <button id="closeBtn" type="submit">X</button>
+    </form>
+</div>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<div id="productDetails" class="product-details-parent"></div>
+
+<div class="product-comments-parent">
+    <div class="product-comments">
+        <form id="commentForm">
+            <textarea id="commentText" cols="30" rows="10" placeholder="write your comment" required></textarea>
+            <button type="submit">send</button>
+        </form>
+        <div id="commentsList" class="comments-list"></div>
+    </div>
+</div>
+
+<div class="product-details-footer">
+    <h3>you may like too:</h3>
+    <div id="randomProductsContainer" class="product-details-footer-products"></div>
+</div>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<script>
+
+fetch("session_check.php")
+    .then(response => response.json())
+    .then(data => {
+        if (!data.loggedIn) {
+            window.location.href = 'login_signup.php';
+        }
+    })
+    .catch(error => console.error('Error checking session:', error));
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // دالة لقراءة المعاملات من الرابط
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // جلب معرف المنتج من الرابط
+        const productId = getQueryParam('product_id');
+
+        // جلب تفاصيل المنتج من الخادم
+        if (productId) {
+            fetch(`get_product_details.php?product_id=${productId}`)
+                .then(response => response.json())
+                .then(product => {
+                    const productDetailsContainer = document.getElementById('productDetails');
+                    if (productDetailsContainer) {
+                        // تعبئة تفاصيل المنتج في الصفحة
+                        productDetailsContainer.innerHTML = `
+                            <div class="product-details-img">
+                                <img src="uploads/${product.product_id}.jpg" alt="${product.name}">
+                            </div>
+                            <div class="product-details">
+                                <h2>${product.name}</h2>
+                                <p>${product.description}</p>
+                                <div><span></span><span></span><span></span></div>
+                                <p>${product.stock_quantity} Available Parts</p>
+                                <p>Price: ${product.price} EGP</p>
+                                <div> 
+                                    <button class="add-to-cart">Add to Cart</button> 
+                                    <i class="fa-solid fa-cart-shopping"></i> 
+                                </div>
+                            </div>
+                        `;
+
+                        // إضافة Event Listener لزر "Add to Cart"
+                        const addButton = productDetailsContainer.querySelector('.add-to-cart');
+                        if (addButton) {
+                            addButton.addEventListener('click', () => {
+                                addToCart(product); // إضافة المنتج إلى السلة
+                            });
+                        }
+                    } else {
+                        console.error("Element with ID 'productDetails' not found.");
+                    }
+                })
+                .catch(error => console.error("Error fetching product details:", error));
+        }
+
+        // دالة لتحميل المنتجات العشوائية
+        function loadRandomProducts() {
+            fetch('get_products.php') // جلب جميع المنتجات من الخادم
+                .then(response => response.json())
+                .then(products => {
+                    const randomProductsContainer = document.getElementById('randomProductsContainer');
+
+                    // مسح المحتوى القديم (إذا وجد)
+                    randomProductsContainer.innerHTML = '';
+
+                    // اختيار 5 منتجات عشوائية
+                    const randomProducts = getRandomProducts(products, 5);
+
+                    // عرض المنتجات العشوائية
+                    displayRandomProducts(randomProducts, randomProductsContainer);
+                })
+                .catch(error => console.error("Error loading products:", error));
+        }
+
+        // دالة لاختيار منتجات عشوائية
+        function getRandomProducts(products, count) {
+            const shuffled = products.sort(() => 0.5 - Math.random()); // ترتيب عشوائي للمنتجات
+            return shuffled.slice(0, count); // اختيار العدد المطلوب من المنتجات
+        }
+
+        // دالة لعرض المنتجات العشوائية
+        function displayRandomProducts(products, container) {
+            products.forEach(product => {
+                const productCard = createRandomProductCard(product); // إنشاء كارد المنتج
+                container.appendChild(productCard);
+            });
+        }
+
+        // دالة لإنشاء كارد المنتج العشوائي
+        function createRandomProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+
+            // مسار الصورة بناءً على product_id
+            const imagePath = `uploads/${product.product_id}.jpg`;
+
+            // محتوى الكارد (بدون زر Add to Cart)
+            card.innerHTML = `
+                <div class="product-image">
+                    <img src="${imagePath}" alt="${product.name}">
+                </div>
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p>${product.price} EGP</p>
+                </div>    
+            `;
+
+            card.addEventListener('click', () => {
+                window.location.href = `product-details.html?product_id=${product.product_id}`;
+            });
+
+            return card;
+        }
+
+        function addToCart(product) {
+
+        fetch('check_auth.php')
+          .then(response => response.json())
+          .then(data => {
+            if (!data.authenticated) {
+              alert('please login')
+              window.location.href = 'login_signup.php';
+              return;
+            }
+          })
+
+
+        fetch('add_to_cart.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                product_id: product.product_id
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('تمت الإضافة للسلة بنجاح');
+            } else {
+                alert(data.error || 'حدث خطأ ما');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('فشل في الإتصال بالخادم');
+        });
+}
+
+
+        // تحميل المنتجات العشوائية عند تحميل الصفحة
+        loadRandomProducts();
+    });
+
+
+
+    function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function loadComments(productId) {
+    fetch(`get_comments.php?product_id=${productId}`)
+        .then(response => response.json())
+        .then(data => {
+            const commentsList = document.getElementById('commentsList');
+            commentsList.innerHTML = '';
+            if (data.status === 'success') {
+                data.comments.forEach(comment => {
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment';
+                    commentDiv.innerHTML = `
+                    <div class="aa">
+                        <div class="user">
+                            <h3>${escapeHTML(comment.username)}</h3>
+                        </div>
+                        <p>${escapeHTML(comment.comment)}</p>
+                        <small>${new Date(comment.created_at).toLocaleString()}</small>
+                        </div>
+                    `;
+                    commentsList.appendChild(commentDiv);
+                });
+            }
+        })
+        .catch(error => console.error('Error loading comments:', error));
+}
+
+document.getElementById('commentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const commentText = document.getElementById('commentText').value;
+    const productId = new URLSearchParams(window.location.search).get('product_id');
+
+    fetch('save_comment.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `product_id=${productId}&comment=${encodeURIComponent(commentText)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            document.getElementById('commentText').value = '';
+            loadComments(productId);
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+// استدعاء الدالة عند تحميل الصفحة
+const productId = new URLSearchParams(window.location.search).get('product_id');
+if (productId) {
+    loadComments(productId);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="imgs/nota-icon.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <title>Nota-checkout</title>
+</head>
+
+<div class="checkout-header-parent">
+  <div class="checkout-header">
+    <button onclick="window.location.href='CARD.html'">BACK</button>
+  </div>
+</div>
+
+<div class="visa-cash" id="visaCash">
+  <h2>Choose you payment method:</h2>
+  <div class="visa-cash-op">
+    <div><img id="showVisa" src="imgs/visa card.png" alt="" height="191px"><h3>visa</h3></div>
+    <div><img id="showCash" src="imgs/cash photo.png" alt=""><h3>cash</h3></div>
+  </div>
+</div>
+
+<div class="checkout-parent">
+  <div id="visaDiv">
+    <div><button id="backToVisaCach">&larr;</button></div>
+    <form action="">
+      <img src="imgs/visa card.png" alt="">
+      <div> <label for="card-number">card number:</label> <input type="text" id="card-number" name="card-number" placeholder="1234-5678-9012-3456" maxlength="19" required> </div>
+      <div> <label for="vvv">vvv:</label> <input type="text" id="vvv" name="vvv" placeholder="231" maxlength="3" required> </div>
+      <div> <label for="card-name">card-name:</label> <input type="text" id="card-name" name="card-name" placeholder="alperto" maxlength="20" required> </div>
+      <button id="goToCheckoutEnd">confirm</button>
+    </form>
+  </div>
+  <div class="cash"></div>
+</div>
+
+<div id="checkoutEndParent" class="checkout-end-parent">
+  <div class="checkout-end">
+    <div><button id="backToVisaOrCach">&larr;</button></div>
+    <h2>last step</h2>
+    <form action="">
+      <div> <label for="customer-name">name:</label> <input type="text" id="customer-name" name="customer-name" placeholder="ron masrebeot" maxlength="24" required> </div>
+      <div> <label for="customer-address">address:</label> <textarea id="customer-address" rows="5" cols="50" placeholder="4 wolf street alex city"></textarea> </div>
+      <div> <label for="customer-number">phone-number:</label> <input type="text" id="customer-number" name="customer-number" placeholder="01234567891" maxlength="1" required> </div>
+    </form>
+    <p>Total:127$</p>
+    <button id="finish">confirm</button>
+  </div>
+  
+</div>
+
+<!---------------------------------------------------------------------------------->
+
+<div id="thankYou">
+  <p>will delivered at 2</p>
+</div>
+
+<div class="checkout-i"><i class="fa-solid fa-dollar-sign"></i> <i class="fa-solid fa-coins"></i></div>
+
+<script src="code-checkout.js"></script>   
+</html>

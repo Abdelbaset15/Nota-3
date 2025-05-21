@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="imgs/nota-icon.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <title>Nota-profile</title>
+</head>
+<body>
+
+  <header>
+    <div class="header-parent">
+        <div class="header-title">
+            <h1>Nota</h1>
+        </div>
+        <div class="header-links">
+            <div><a href="index.html" class="hover-effect"><p>HOME</p><i class="fa-solid fa-house"></i></a></div>
+            <div><a href="products.html"><p>PRODUCTS</p><i class="fa-solid fa-book"></i></a></div>
+            <div><a href="card.html"><p>CARD</p><i class="fa-solid fa-cart-shopping"></i></a></div>
+        </div>
+        <div class="header-username">
+            <button style="display: none;" type="button" id="openBtn" class="fa-solid fa-search"><span class="span1">.</span></button>
+            <button style="display: none;" type="button" class="fa-solid fa-user" onclick="toggleLoginPopup()"><span class="span1">.</span></button>
+        </div>
+    </div>
+  </header>
+  
+<!-- --------------------------------------------------------------- -->
+
+  <div class="profile-parent">
+    <div class="profile-header">
+      <div id="backgroundDiv"></div>
+      <h2>Your Information</h2>
+    </div>
+
+    <div class="profile-body">
+      <div class="user-info">
+        <p id="username"></p>
+        <p id="email"></p>
+        <p id="phone"></p>
+        <p id="address"></p>
+        <select name="gender" id="gender">
+            <option value="male">👨</option>
+            <option value="female">👩</option>
+        </select>
+      </div>
+
+      <div class="your-requests">
+        <h3>Your Ongoing Requests</h3>
+        <div class="your-requests-info">
+            <div><img src="imgs/drums.jpg" alt=""><p>drum</p></div>
+            <div><img src="imgs/drums.jpg" alt=""><p>drum</p></div>
+            <div><img src="imgs/drums.jpg" alt=""><p>drum</p></div>
+            <div><img src="imgs/drums.jpg" alt=""><p>drum</p></div>
+        </div>
+        <p>Will arrive at 2pm</p>
+        <div class="logout-button"><button onclick="logout()">Logout</button></div>
+      </div>
+    </div>
+  </div>
+
+<!-- --------------------------------------------------------------- -->
+
+  <script>
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch("session_check.php")
+        .then(response => response.json())
+        .then(data => {
+            if (!data.loggedIn) {
+                window.location.href = "login_signup.php";
+            } else {
+                // عرض اسم المستخدم
+                document.getElementById("username").textContent = data.username;
+
+                // جلب بيانات المستخدم
+                fetch("getUserData.php")
+                    .then(response => response.json())
+                    .then(userData => {
+                        if (userData.error) {
+                            alert("حدث خطأ أثناء جلب البيانات.");
+                            return;
+                        }
+                        
+                        // عرض البيانات النصية
+                        document.getElementById("email").textContent = userData.email;
+                        document.getElementById("phone").textContent = userData.phone;
+                        document.getElementById("address").textContent = userData.address;
+
+                        // عرض الصورة هنا داخل هذا النطاق
+                        const backgroundDiv = document.getElementById("backgroundDiv");
+                        if (userData.user_picture) {
+                            backgroundDiv.style.backgroundImage = `url(${userData.user_picture})`;
+                            backgroundDiv.style.backgroundSize = "cover";
+                            backgroundDiv.style.backgroundPosition = "center";
+                        }
+                    })
+                    .catch(error => console.error("Error fetching user data:", error));
+            }
+        })
+        .catch(error => console.error("Error:", error));
+});
+
+function logout() {
+    fetch('logout.php') 
+        .then(() => {
+            window.location.href = 'login_signup.php'; 
+        })
+}
+
+// تحقق من حالة الجلسة كل 3 ثواني
+setInterval(() => {
+    fetch('session_check.php')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.loggedIn) {
+                window.location.href = 'login_signup.php';
+            }
+        });
+}, 3000);
+
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="imgs/nota-icon.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <title>Nota-CARD</title>
+</head>
+<body>
+
+  <style>
+    .header-links div:nth-child(3) a {
+      color: var(--logo-color);
+    }
+  </style>
+  
+    
+    <header>
+
+        <div class="header-parent">
+
+            <div class="header-title">
+                <h1>Nota</h1>
+            </div>
+
+
+            <div class="header-links">
+                <div><a href="index.html" class="hover-effect"><p>HOME</p><i class="fa-solid fa-house"></i></a></div>
+                <div><a href="products.html"><p>PRODUCTS</p><i class="fa-solid fa-book"></i></a></div>
+                <div><a href="card.html"><p>CARD</p><i class="fa-solid fa-cart-shopping"></i></a></div>
+            </div>
+
+            <div class="header-username">
+                <a href="http://localhost/Nota/login_signup.php">
+                  <button type="button" class="fa-solid fa-user">
+                      <span class="span1">.</span>
+                  </button>
+              </a>
+            </div>
+
+        </div>
+
+    </header>
+
+    <div id="search">
+      <form action="" method="get">
+          <label for="search-bar">search:</label>
+          <input name="aa" id="search-bar" type="search">
+          <button class="search-click" type="submit">Click</button>
+          <button id="closeBtn" type="button">X</button>
+      </form>
+      </div>
+      
+
+    
+<!------------------------------------------------------------------------------->
+
+<div class="shopping-parent">
+  <div class="shopping-title">
+    <h2>Product</h2>
+    <h2>Quantity</h2>
+    <h2>Subtotal</h2>
+  </div>
+
+
+  <div id="cartItems" class="shopping-product-parent">
+    </div>
+
+
+  <div class="shopping-payment">
+    <div>
+      <h4>Subtotal</h4>
+      <p></p>
+    </div>
+
+    <div>
+      <h4>Tax</h4>
+      <p></p>
+    </div>
+
+    <div>
+      <h4>Delivery</h4>
+      <p></p>
+    </div>
+
+    <div>
+      <h3>Total</h3>
+      <p></p>
+    </div>
+
+  <div>
+
+    <button onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+    <button onclick="clearCart()" style="background-color: #ff4d4d; margin-top: 10px;">Clear Cart</button>
+
+  </div>
+    
+  </div>
+
+<div class="background-text">Music is not just sound, it's emotion in every note. 🎶</div>
+<div class="instrument-shopping">
+  <i class="fa-solid fa-music"></i>
+  <i class="fa-solid fa-music"></i>
+</div>
+</div>
+
+<!------------------------------------------------------------------------------->
+
+
+<footer>
+  <div class="footer-parent">
+
+      <div class="footer-header">
+          <div>
+              <i class="fa-solid fa-folder" ></i>
+              <h5>Nota</h5>
+          </div>
+          <div><p>
+            At Nota, we are passionate about music and dedicated to providing high-quality musical instruments for musicians of all levels. Whether you're a beginner or a professional, we offer a wide range of instruments and accessories to help you create the perfect sound,<br> 
+            
+            Our mission is to bring music closer to everyone by offering top brands, excellent customer service, and affordable prices. Let’s make music together! <br>
+            
+            Feel free to tweak it to match your brand’s personality! 😊</p></div>
+      </div>
+
+      <div class="categories">
+
+          <div class="categories-header">
+                  <h2>Contact us</h2>
+          </div>
+
+          <div class="categories-links">
+          <a href="index.html">Facebook</a>
+          <a href="index.html">Linkedin</a>
+          <a href="index.html">Instagram</a>
+          <a href="index.html">X</a>
+          </div>
+
+      </div>
+
+      <div class="footer-footer">
+
+          <div class="copyright">
+              <p>copyright© 2025 Nota.com. All rights Reserved</p>
+          </div>
+
+          <div class="social">
+              <a href="index.html"><i class="fa-brands fa-facebook"></i></a>
+              <a href="index.html"><i class="fa-brands fa-twitter"></i></a>
+              <a href="index.html"><i class="fa-brands fa-linkedin"></i></a>
+              <a href="index.html"><i class="fa-brands fa-whatsapp"></i></a>
+              <a href="index.html"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+
+      </div>
+
+  </div>
+</footer>
+
+<!-- ----------------------------------------------------------------------- -->
+<div class='alert'><p>your <br/> Device <br/> is not <br/> Supported</p></div>
+<!-- <script src="code.js"></script>    -->
+
+
+
+<script>
+
+function calculateTotals(cart) {
+    let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    let tax = subtotal * 0.15;
+    let delivery = 50; // رسوم التوصيل
+    let total = subtotal + tax + delivery;
+
+    document.querySelector('.shopping-payment div:nth-child(1) p').textContent = `${subtotal.toFixed(2)} EGP`;
+    document.querySelector('.shopping-payment div:nth-child(2) p').textContent = `${tax.toFixed(2)} EGP`;
+    document.querySelector('.shopping-payment div:nth-child(3) p').textContent = `${delivery.toFixed(2)} EGP`;
+    document.querySelector('.shopping-payment div:nth-child(4) p').textContent = `${total.toFixed(2)} EGP`;
+}
+
+function loadCart() {
+    fetch('get_cart.php')
+    .then(response => {
+        if (!response.ok) throw new Error('Network error');
+        return response.json();
+    })
+    .then(cart => {
+        const container = document.getElementById('cartItems');
+        container.innerHTML = '';
+
+        if (cart.length === 0) {
+            container.innerHTML = '<p>السلة فارغة</p>';
+            return;
+        }
+
+        cart.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            cartItem.innerHTML = `
+                <div class="shopping-product">
+                    <div class="product-info">
+                        <div class="product-details">
+                        <h3>${item.name}</h3>
+                        </div>
+                        <p class="a1"> ${item.quantity}</p>
+                        <p class="a2"> ${item.price * item.quantity} EGP</p>
+                    </div>
+                    <button onclick="removeItem(${item.id})"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+                <hr>
+            `;
+            container.appendChild(cartItem);
+        });
+        calculateTotals(cart);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('فشل في تحميل السلة');
+    });
+}
+
+
+
+function clearCart() {
+    fetch('clear_cart.php', {
+        method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('تم تفريغ السلة بنجاح');
+            loadCart();
+            document.querySelector('.shopping-payment div:nth-child(1) p').textContent = ` EGP`;
+            document.querySelector('.shopping-payment div:nth-child(2) p').textContent = ` EGP`;
+            document.querySelector('.shopping-payment div:nth-child(3) p').textContent = ` EGP`;
+            document.querySelector('.shopping-payment div:nth-child(4) p').textContent = ` EGP`;
+        } else {
+            alert(data.error || 'حدث خطأ ما');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('فشل في الإتصال بالخادم');
+    });
+}
+
+function removeItem(itemId) {
+    fetch(`remove_item.php?id=${itemId}`, {
+        method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            loadCart(); // إعادة تحميل السلة بعد الحذف
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart(); // سيتم استدعاء الدالة بمجرد تحميل الصفحة
+});
+</script>
+</body>

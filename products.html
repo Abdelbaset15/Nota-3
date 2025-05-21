@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="imgs/nota-icon.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <title>Nota-products</title>
+</head>
+
+<!-- --------------------------------------------------------------- -->
+
+<style>
+  .header-links div:nth-child(2) a {
+    color: var(--logo-color);
+  }
+</style>
+
+<!-- --------------------------------------------------------------- -->
+
+<body>
+  
+  <header>
+    
+    <div class="header-parent">
+      
+      <div class="header-title">
+          <h1>Nota</h1>
+      </div>
+
+
+      <div class="header-links">
+          <div><a href="index.html" class="hover-effect"><p>HOME</p><i class="fa-solid fa-house"></i></a></div>
+          <div><a href="products.html"><p>PRODUCTS</p><i class="fa-solid fa-book"></i></a></div>
+          <div><a href="card.html"><p>CARD</p><i class="fa-solid fa-cart-shopping"></i></a></div>
+      </div>
+
+      <div class="header-username">
+          <button type="button" id="openBtn" class="fa-solid fa-search"><span class="span1">.</span></button>
+          <a href="http://localhost/Nota/login_signup.php">
+            <button type="button" class="fa-solid fa-user">
+                <span class="span1">.</span>
+            </button>
+          </a>
+      </div>
+
+    </div>
+
+  </header>
+
+<!-- --------------------------------------------------------------- -->
+
+  <div class="search-overlay" id="searchOverlay"></div>
+  <div id="search">
+    <form action="" method="get">
+        <label for="search-bar">search:</label>
+        <input name="aa" id="search-bar" type="search">
+        <button id="closeBtn" type="button">X</button>
+      </form>
+      <div id="searchResults"></div>
+    </div>
+
+<!-- --------------------------------------------------------------- -->
+    
+  <div class="products-parent">
+
+    <div class="products-title">
+      <h2>All Products</h2>
+      <select id="categoryFilter">
+        <option value="all">All</option>
+        <option value="1">Guitars</option>
+        <option value="2">Keyboards</option>
+        <option value="3">Drums</option>
+      </select>
+    </div>
+
+    <div id="productsContainer" class="products-content">
+      <div class="productCard">
+
+      </div>
+
+    </div>
+
+<!-- --------------------------------------------------------------- -->
+          
+          <div class="products-background">
+            <div class="instrument-products">
+              <i class="fa-solid fa-headphones"></i>
+            </div>
+            <div class="instrument-products">
+              <i class="fa-solid fa-music"></i>
+            </div>
+            <div class="instrument-products">
+              <i class="fa-solid fa-drum"></i>
+            </div>
+            <div class="instrument-products">
+              <i class="fa-solid fa-compact-disc"></i>
+            </div>
+            <div class="instrument-products">
+          <i class="fa-solid fa-drum-steelpan"></i>
+      </div>
+      <div class="instrument-products">
+          <i class="fa-brands fa-napster"></i>
+      </div>
+      <div class="instrument-products">
+          <i class="fa-solid fa-microphone-lines"></i>
+      </div>
+      <div class="instrument-products">
+          <i class="fa-solid fa-circle-play"></i>
+      </div>
+   </div>  
+
+<!-- --------------------------------------------------------------- -->
+   
+  <div class='alert'><p>your <br/> Device <br/> is not <br/> Supported</p></div>
+    <script src="code-product.js"></script>   
+  </body>
+</html>
